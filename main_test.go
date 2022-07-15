@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -105,7 +106,7 @@ func TestListOperation(t *testing.T) {
 		t.Error(err)
 	}
 	defer file.Close()
-	
+
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		t.Error(err)
@@ -174,7 +175,7 @@ func TestAddingOperationSameID(t *testing.T) {
 	resultOutput := buffer.String()
 
 	if resultOutput != expectedOutput {
-		t.Errorf("Expect error to be '%s', but got '%s'", expectedOutput, resultOutput)
+		t.Errorf("Expect error to be '%s', but got '%s', %v, %v", expectedOutput, resultOutput, len(expectedOutput), len(resultOutput))
 	}
 }
 
@@ -318,7 +319,7 @@ func TestRemovingOperationMissingID(t *testing.T) {
 	expectedError := "-id flag has to be specified"
 
 	err := Perform(args, &buffer)
-
+	fmt.Println("on Testing::", err)
 	if err == nil {
 		t.Error("Error has to be shown when -id flag is missing")
 	}
@@ -392,11 +393,8 @@ func TestRemovingOperation(t *testing.T) {
 	}
 
 	file, err = os.OpenFile(fileName, os.O_RDONLY, filePermission)
-	defer file.Close()
 
-	if err != nil {
-		t.Error(err)
-	}
+	defer file.Close()
 
 	bytes, err := ioutil.ReadAll(file)
 
